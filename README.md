@@ -45,6 +45,7 @@ cd TradeSphere
 
 ## 📸 Screenshots
 ![image](https://github.com/user-attachments/assets/04a6d04f-1055-4055-87c1-af1066c5635d)
+
 ![image](https://github.com/user-attachments/assets/50e3a5b3-c976-4c65-bffe-e955cd779913)
 
 ![image](https://github.com/user-attachments/assets/f41944a1-fab1-43ff-81d2-f11fe5bd8b7d)
