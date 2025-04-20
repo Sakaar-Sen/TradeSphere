@@ -5,36 +5,43 @@
 {% block content %}
     <div class="pb-6 grid grid-cols-4 gap-4 bg-gray-100">
         <div class="col-span-1">
-            <form method="get" action="{% url 'item:items' %}">
+            <form method="get" action="{% url 'item:items' %}" class="m-2">
                 <input name="query" class="w-full py-4 px-6 border rounded-xl" type="text" value="{{ query }}" placeholder="Browse Items...">
 
-                <button class="mt-2 py-4 px-8 text-lg bg-teal-500 text-white rounded-xl">Search</button>
+                <button class="mt-4 ml-32 py-2 px-4 text-lg bg-teal-500 text-white rounded-xl">Search</button>
+
+                <hr class="my-6">
+
+                <p class="ml-4 font-semibold mb-2">Filter by Category</p>
+                <select name="category" class="w-full py-4 px-6 border rounded-xl mb-4" onchange="this.form.submit()">
+                    <option value="-1">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == category_id %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <hr class="my-6">
+
+                <p class="ml-4 font-semibold mb-5">Sort by</p>
+                <select name="sort_by" class="w-full py-4 px-6 border rounded-xl" onchange="this.form.submit()">
+                    <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Date: Newest to Oldest</option>
+                    <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Date: Oldest to Newest</option>
+                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                </select>
+
+                <hr class="my-6">
+
+                <ul>
+                    <li><a href="{% url 'item:items' %}" class="mt-2 mt-4 ml-32 py-2 px-4 inline-block bg-yellow-500 text-lg rounded-xl text-white">Clear Filters</a>
+                </ul>
             </form>
-
-            <hr class="my-6">
-
-            <p class="font-semibold">Categories</p>
-
-            <ul>
-                {% for category in categories %}
-                    <li class="py-2 px-2 rounded-xl{% if category.id == category_id %} bg-gray-200{% endif %}">
-                        <a href="{% url 'item:items' %}?query={{ query }}&category={{ category.id }}">{{ category.name }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-
-            <hr class="my-6">
-
-            <p class="font-semibold">Clear filters</p>
-
-            <ul>
-                <li><a href="{% url 'item:items' %}" class="mt-2 py-4 px-8 inline-block bg-yellow-500 text-lg rounded-xl text-white">Clear</a>
         </div>
 
         <div class="col-span-3">
             <div class="grid grid-cols-3 gap-3">
                 {% for item in items %}
-                    <div>
+                    <div class="mt-4">
                         <a href="{% url 'item:detail' item.id %}">
                             <div>
                                 <img src="{{ item.image.url }}" class="rounded-t-xl">
@@ -42,7 +49,7 @@
     
                             <div class="p-6 bg-white rounded-b-xl">
                                 <h2 class="text-2xl">{{ item.name }}</h2>
-                                <p class="text-gray-500">Price: {{ item.price }}</p>
+                                <p class="text-gray-500">Price: ₹{{ item.price }}</p>
                             </div>
                         </a>
                     </div>

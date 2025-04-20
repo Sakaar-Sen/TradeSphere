@@ -9,8 +9,9 @@ from django.db.models import Q
 def items(request : HttpRequest):
     search_query = request.GET.get('query', '')
     category_id = request.GET.get('category', -1)
-    items = Item.objects.filter(is_sold=False).order_by('-created_at')
-    categories = Category.objects.all()
+    sort_by = request.GET.get('sort_by', 'date_desc')  # Default to sorting by date (newest first)
+    
+    items = Item.objects.filter(is_sold=False)
 
     if category_id != -1:
         items = items.filter(category_id=category_id)
@@ -18,11 +19,23 @@ def items(request : HttpRequest):
     if search_query:
         items = items.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query))
 
+
+    if sort_by == 'date_desc':
+        items = items.order_by('-created_at')  
+    elif sort_by == 'date_asc':
+        items = items.order_by('created_at') 
+    elif sort_by == 'price_desc':
+        items = items.order_by('-price')  
+    elif sort_by == 'price_asc':
+        items = items.order_by('price') 
+
+    categories = Category.objects.all()
     context = {
         'items': items,
         'query': search_query,
         'categories': categories,
         'category_id': int(category_id),
+        'sort_by': sort_by,
     }
     return render(request, 'item/items.html', context)
 
